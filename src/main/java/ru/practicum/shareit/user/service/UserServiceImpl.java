@@ -45,16 +45,16 @@ public class UserServiceImpl implements UserService {
         // проверка есть ли такой пользователь
         try {
            User userToUpd =  userRepository.findUserById(id);
-            if (user.getEmail() != null){
+            if (user.getEmail() != null) {
                 user.setId(id);
                 checkMail(user);
                 userToUpd.setEmail(user.getEmail());
             }
-            if (user.getName() != null){
+            if (user.getName() != null) {
                 userToUpd.setName(user.getName());
             }
             return userRepository.updateUser(userToUpd, id);
-        } catch (NotFoundException e){
+        } catch (NotFoundException e) {
             e.getMessage();
         }
         return null;
@@ -70,9 +70,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @SneakyThrows
-    private void checkMail (User user){
+    private void checkMail(User user) {
         for (User check: userRepository.getAll()) {
-            if (user.getEmail().equals(check.getEmail()) && user.getId()!=check.getId()){
+            if (user.getEmail().equals(check.getEmail()) && user.getId() != check.getId()) {
                 throw new NonUniqueException("Email is not unique!");
             }
         }

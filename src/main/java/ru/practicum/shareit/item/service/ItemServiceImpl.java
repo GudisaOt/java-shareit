@@ -7,7 +7,6 @@ import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.User;
-import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ import java.util.List;
 import static ru.practicum.shareit.item.dto.ItemMapper.toItemDto;
 
 @Service
-public class ItemServiceImpl implements ItemService{
+public class ItemServiceImpl implements ItemService {
     @Autowired
     private final ItemRepository itemRepository;
     @Autowired
@@ -48,7 +47,7 @@ public class ItemServiceImpl implements ItemService{
     @Override
     public ItemDto create(Item item, int userId) {
         User user = userService.getById(userId);
-        if (user == null){
+        if (user == null) {
             throw new NotFoundException("User not found");
         }
         item.setOwner(user);
@@ -58,16 +57,16 @@ public class ItemServiceImpl implements ItemService{
     @Override
     public ItemDto update(Item item, int id, int userId) {
         Item itemToUpd = itemRepository.getById(id);
-        if (itemToUpd.getOwner().getId() != userId){
+        if (itemToUpd.getOwner().getId() != userId) {
             throw new NotFoundException("Предмет отсутсвует у пользователя");
         }
-        if (item.getName() != null){
+        if (item.getName() != null) {
             itemToUpd.setName(item.getName());
         }
-        if (item.getDescription() != null){
+        if (item.getDescription() != null) {
             itemToUpd.setDescription(item.getDescription());
         }
-        if (item.getAvailable() != null){
+        if (item.getAvailable() != null) {
             itemToUpd.setAvailable(item.getAvailable());
         }
         return toItemDto(itemRepository.update(itemToUpd, id));
@@ -82,7 +81,7 @@ public class ItemServiceImpl implements ItemService{
     @Override
     public List<ItemDto> search(String text) {
         List<ItemDto> itemDtos = new ArrayList<>();
-        for (Item item: itemRepository.search(text)){
+        for (Item item: itemRepository.search(text)) {
             itemDtos.add(toItemDto(item));
         }
         return itemDtos;

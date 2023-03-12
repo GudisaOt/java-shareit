@@ -2,7 +2,6 @@ package ru.practicum.shareit.user;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.NonNull;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -19,6 +18,7 @@ public class User {
     @Email
     @NotBlank
     private String email;
+
     @Builder
     public User(int id, String name, String email) {
         this.id = id;

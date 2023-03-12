@@ -8,9 +8,14 @@ import java.util.List;
 
 public interface ItemService {
     Collection<ItemDto> getAll(int userId);
-    ItemDto getById (int id);
-    ItemDto create (Item item, int userId);
-    ItemDto update (Item item,int id, int userId);
-    void delete (int id);
-    List<ItemDto> search (String text);
+
+    ItemDto getById(int id);
+
+    ItemDto create(Item item, int userId);
+
+    ItemDto update(Item item,int id, int userId);
+
+    void delete(int id);
+
+    List<ItemDto> search(String text);
 }

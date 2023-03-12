@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Component
-public class ItemRepositoryImpl implements ItemRepository{
+public class ItemRepositoryImpl implements ItemRepository {
     HashMap<Integer, Item> items = new HashMap<>();
     private static int genId = 1;
 
@@ -55,11 +55,11 @@ public class ItemRepositoryImpl implements ItemRepository{
     public List<Item> search(String text) {
         String textToLower = text.toLowerCase();
         List<Item> foundItems = new ArrayList<>();
-        if (text.isBlank()){
+        if (text.isBlank()) {
             return foundItems;
         }
         for (Item item:items.values()) {
-            if ((item.getName().toLowerCase().contains(textToLower) || item.getDescription().toLowerCase().contains(textToLower)) && item.getAvailable()){
+            if ((item.getName().toLowerCase().contains(textToLower) || item.getDescription().toLowerCase().contains(textToLower)) && item.getAvailable()) {
                 foundItems.add(item);
             }
         }

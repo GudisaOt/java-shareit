@@ -4,13 +4,11 @@ import org.springframework.stereotype.Component;
 import ru.practicum.shareit.user.User;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 
 @Component
 public class UserRepositoryImpl implements UserRepository {
-    HashMap<Integer, User> usersStorage = new HashMap<>();
+    private HashMap<Integer, User> usersStorage = new HashMap<>();
     private static int genId = 1;
 
     @Override

@@ -39,9 +39,6 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public Item update(Item item, int id) {
-        // проверка есть ли предмет в репозитории
-        getById(id);
-
         items.put(item.getId(), item);
         return getById(item.getId());
     }

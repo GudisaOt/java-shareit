@@ -14,6 +14,7 @@ public class ItemDto {
     private String description;
     private Boolean available;
     private ItemRequest request;
+    
     @Builder
     public ItemDto(int id, String name, String description, boolean available, ItemRequest request) {
         this.id = id;

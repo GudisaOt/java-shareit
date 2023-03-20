@@ -1,9 +1,11 @@
 package ru.practicum.shareit.item.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.User;
@@ -13,27 +15,21 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static ru.practicum.shareit.item.dto.ItemMapper.toItemDto;
 
 @Service
+@RequiredArgsConstructor
 public class ItemServiceImpl implements ItemService {
-    @Autowired
+
     private final ItemRepository itemRepository;
-    @Autowired
     private final UserService userService;
-
-    public ItemServiceImpl(ItemRepository itemRepository, UserService userService) {
-        this.itemRepository = itemRepository;
-        this.userService = userService;
-    }
-
+    private final ItemMapper mapper;
 
     @Override
     public Collection<ItemDto> getAll(int userId) {
         List<ItemDto> userItems = new ArrayList<>();
         for (Item item:itemRepository.getAll()) {
             if (item.getOwner().getId() == userId) {
-                userItems.add(toItemDto(item));
+                userItems.add(mapper.toItemDto(item));
             }
         }
         return userItems;
@@ -41,7 +37,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto getById(int id) {
-        return toItemDto(itemRepository.getById(id));
+        return mapper.toItemDto(itemRepository.getById(id));
     }
 
     @Override
@@ -51,7 +47,7 @@ public class ItemServiceImpl implements ItemService {
             throw new NotFoundException("User not found");
         }
         item.setOwner(user);
-        return toItemDto(itemRepository.create(item));
+        return mapper.toItemDto(itemRepository.create(item));
     }
 
     @Override
@@ -69,7 +65,7 @@ public class ItemServiceImpl implements ItemService {
         if (item.getAvailable() != null) {
             itemToUpd.setAvailable(item.getAvailable());
         }
-        return toItemDto(itemRepository.update(itemToUpd, id));
+        return mapper.toItemDto(itemRepository.update(itemToUpd, id));
     }
 
     @Override
@@ -82,7 +78,7 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemDto> search(String text) {
         List<ItemDto> itemDtos = new ArrayList<>();
         for (Item item: itemRepository.search(text)) {
-            itemDtos.add(toItemDto(item));
+            itemDtos.add(mapper.toItemDto(item));
         }
         return itemDtos;
     }

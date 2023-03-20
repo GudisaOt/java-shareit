@@ -11,7 +11,7 @@ import java.util.List;
 
 @Component
 public class ItemRepositoryImpl implements ItemRepository {
-    HashMap<Integer, Item> items = new HashMap<>();
+    private HashMap<Integer, Item> items = new HashMap<>();
     private static int genId = 1;
 
     @Override

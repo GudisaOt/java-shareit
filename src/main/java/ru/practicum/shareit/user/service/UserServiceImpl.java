@@ -1,80 +1,49 @@
 package ru.practicum.shareit.user.service;
 
-import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exceptions.NonUniqueException;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    @Autowired
     private final UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
+    @Transactional(readOnly = true)
     @Override
     public Collection<User> getAll() {
-        return userRepository.getAll();
+        return userRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public User getById(int id) {
-        try {
-            return userRepository.findUserById(id);
-        } catch (NotFoundException e) {
-            e.getMessage();
-        }
-        return null;
+        return userRepository.findById(id).orElseThrow(()-> new NotFoundException("Not found!"));
     }
-
+    @Transactional
     @Override
     public User create(User user) {
-        checkMail(user);
-        return userRepository.createUser(user);
+        return userRepository.save(user);
     }
 
+    @Transactional
     @Override
     public User update(User user, int id) {
-        // проверка есть ли такой пользователь
-        try {
-           User userToUpd =  userRepository.findUserById(id);
-            if (user.getEmail() != null) {
-                user.setId(id);
-                checkMail(user);
-                userToUpd.setEmail(user.getEmail());
-            }
-            if (user.getName() != null) {
-                userToUpd.setName(user.getName());
-            }
-            return userRepository.updateUser(userToUpd, id);
-        } catch (NotFoundException e) {
-            e.getMessage();
-        }
-        return null;
+        User userToUpd = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
+        Optional.ofNullable(user.getName()).ifPresent(userToUpd::setName);
+        Optional.ofNullable(user.getEmail()).ifPresent(userToUpd::setEmail);
+        return userRepository.save(userToUpd);
     }
 
+    @Transactional
     @Override
     public void delete(int id) {
-        try {
-            userRepository.deleteUser(id);
-        } catch (NotFoundException e) {
-            e.getMessage();
-        }
-    }
-
-    @SneakyThrows
-    private void checkMail(User user) {
-        for (User check: userRepository.getAll()) {
-            if (user.getEmail().equals(check.getEmail()) && user.getId() != check.getId()) {
-                throw new NonUniqueException("Email is not unique!");
-            }
-        }
+        userRepository.deleteById(id);
     }
 }

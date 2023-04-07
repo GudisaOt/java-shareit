@@ -1,32 +1,22 @@
 package ru.practicum.shareit.booking.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.shareit.enums.Status;
-import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.User;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-/**
- * TODO Sprint add-bookings.
- */
-@Builder
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookingDto {
+public class BookingTimesDto {
     private int id;
-
-    private User booker;
-
-    private Item item;
-
+    private int bookerId;
+    private int itemId;
     @NotNull
     @Future
     private LocalDateTime start;
@@ -34,6 +24,4 @@ public class BookingDto {
     @NotNull
     @Future
     private LocalDateTime end;
-
-    private Status status;
 }

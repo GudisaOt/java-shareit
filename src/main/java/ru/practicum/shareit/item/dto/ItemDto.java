@@ -7,9 +7,6 @@ import ru.practicum.shareit.request.ItemRequest;
 
 import java.util.List;
 
-/**
- * TODO Sprint add-controllers.
- */
 @Data
 @Builder
 public class ItemDto {

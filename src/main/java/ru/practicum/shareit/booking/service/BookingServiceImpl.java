@@ -29,7 +29,7 @@ public class BookingServiceImpl implements BookingService{
     private final ItemRepository itemRepository;
     private final BookingMapper bookingMapper;
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public List<BookingDto> getAllByOwner(int ownerId, String state) {
         User user = userRepository.findById(ownerId).orElseThrow(()-> new NotFoundException("User not found!"));
@@ -64,7 +64,7 @@ public class BookingServiceImpl implements BookingService{
         return bookings.stream().map(bookingMapper::toBookingDto).collect(Collectors.toList());
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public List<BookingDto> getAllByUser(int userId, String state) {
         User user = userRepository.findById(userId).orElseThrow(()-> new NotFoundException("User not found!"));
@@ -142,7 +142,7 @@ public class BookingServiceImpl implements BookingService{
         return bookingMapper.toBookingDto(bookingRepository.save(booking));
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public BookingDto getById(int bookingId, int userId) {
         Booking booking = bookingRepository.findById(bookingId).

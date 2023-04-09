@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Table(name = "bookings")
 @Builder
-public class Booking implements Comparable<Booking> {
+public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -46,15 +46,4 @@ public class Booking implements Comparable<Booking> {
     @Enumerated(EnumType.STRING)
     @Column
     private Status status;
-
-    @Override
-    public boolean equals(Object o) {
-        return ((Booking) o).getStart().equals(getStart());
-    }
-
-
-    @Override
-    public int compareTo(Booking o) {
-        return getStart().compareTo(o.getStart());
-    }
 }

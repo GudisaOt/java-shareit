@@ -49,14 +49,14 @@ public class ItemServiceImpl implements ItemService {
         List<Item> items = itemRepository.findAllByOwnerId(userId);
         List<ItemDto> itemDtos = items.stream().map(itemMapper::toItemDto).collect(Collectors.toList());
         itemDtos.forEach(itemDto -> {
-            itemDto.setLastBooking(bookingRepository.
-                    findAllByItemIdAndStartIsBeforeOrderByEndDesc(itemDto.getId(), LocalDateTime.now()).isEmpty() ?
-                    null : bookingMapper.toBookingTimesDto(bookingRepository.
-                    findAllByItemIdAndStartIsBeforeOrderByEndDesc(itemDto.getId(), LocalDateTime.now()).get(0)));
-            itemDto.setNextBooking(bookingRepository.
-                    findAllByItemIdAndStartIsAfterOrderByStartAsc(itemDto.getId(), LocalDateTime.now()).isEmpty() ?
-                    null : bookingMapper.toBookingTimesDto(bookingRepository.
-                    findAllByItemIdAndStartIsAfterOrderByStartAsc(itemDto.getId(), LocalDateTime.now()).get(0)));
+            itemDto.setLastBooking(bookingRepository
+                    .findAllByItemIdAndStartIsBeforeOrderByEndDesc(itemDto.getId(), LocalDateTime.now()).isEmpty() ?
+                    null : bookingMapper.toBookingTimesDto(bookingRepository
+                    .findAllByItemIdAndStartIsBeforeOrderByEndDesc(itemDto.getId(), LocalDateTime.now()).get(0)));
+            itemDto.setNextBooking(bookingRepository
+                    .findAllByItemIdAndStartIsAfterOrderByStartAsc(itemDto.getId(), LocalDateTime.now()).isEmpty() ?
+                    null : bookingMapper.toBookingTimesDto(bookingRepository
+                    .findAllByItemIdAndStartIsAfterOrderByStartAsc(itemDto.getId(), LocalDateTime.now()).get(0)));
             itemDto.setComments(commentRepository.findAllByItemId(itemDto.getId())
                     .stream().map(commentMapper::toCommentDto).collect(Collectors.toList()));
         });
@@ -111,7 +111,7 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     @Override
     public ItemDto update(Item item, int id, int userId) {
-        Item itemToUpd = itemRepository.findById(id).orElseThrow(()-> new NotFoundException("Item not found"));
+        Item itemToUpd = itemRepository.findById(id).orElseThrow(() -> new NotFoundException("Item not found"));
         if (itemToUpd.getOwner().getId() != userId) {
             throw new NotFoundException("Wrong user Id");
         }
@@ -155,12 +155,12 @@ public class ItemServiceImpl implements ItemService {
         if (comment.getText().isBlank()) {
             throw new BadRequestException("Text is blank!");
         }
-        if (bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(authorId, Status.APPROVED).isEmpty()){
+        if (bookingRepository.findAllByBookerIdAndStatusOrderByStartDesc(authorId, Status.APPROVED).isEmpty()) {
             throw new BadRequestException("This user has not booked an item");
         }
 
-        List<Booking> bookings = bookingRepository.
-                findAllByBookerIdAndItemIdAndStatusAndEndBefore(authorId, itemId, Status.APPROVED, LocalDateTime.now());
+        List<Booking> bookings = bookingRepository
+                .findAllByBookerIdAndItemIdAndStatusAndEndBefore(authorId, itemId, Status.APPROVED, LocalDateTime.now());
         if (bookings.isEmpty()) {
             throw new BadRequestException("Bad request!");
         }

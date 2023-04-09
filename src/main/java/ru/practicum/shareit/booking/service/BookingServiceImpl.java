@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class BookingServiceImpl implements BookingService{
+public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final UserRepository userRepository;
     private final ItemRepository itemRepository;
@@ -32,7 +32,7 @@ public class BookingServiceImpl implements BookingService{
     @Transactional(readOnly = true)
     @Override
     public List<BookingDto> getAllByOwner(int ownerId, String state) {
-        User user = userRepository.findById(ownerId).orElseThrow(()-> new NotFoundException("User not found!"));
+        User user = userRepository.findById(ownerId).orElseThrow(() -> new NotFoundException("User not found!"));
         List<Booking> bookings = new ArrayList<>();
         switch (state) {
             case "ALL":
@@ -67,7 +67,7 @@ public class BookingServiceImpl implements BookingService{
     @Transactional(readOnly = true)
     @Override
     public List<BookingDto> getAllByUser(int userId, String state) {
-        User user = userRepository.findById(userId).orElseThrow(()-> new NotFoundException("User not found!"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found!"));
         ArrayList<Booking> bookings = new ArrayList<>();
         switch (state) {
             case "ALL":
@@ -100,9 +100,9 @@ public class BookingServiceImpl implements BookingService{
     @Transactional
     @Override
     public BookingDto add(BookingTimesDto bookingTimesDto, int id) {
-        User user = userRepository.findById(id).orElseThrow(()-> new NotFoundException("User not found"));
+        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
         Item item = itemRepository.findById(bookingTimesDto.getItemId())
-                .orElseThrow(()-> new NotFoundException("Item not found"));
+                .orElseThrow(() -> new NotFoundException("Item not found"));
         if (item.getOwner().getId() == user.getId()) {
             throw new NotFoundException("Error");
         }
@@ -124,12 +124,12 @@ public class BookingServiceImpl implements BookingService{
     @Override
     public BookingDto approve(int bookingId, int userId, Boolean approved) {
         Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(()-> new NotFoundException("Booking not found"));
-        if(userId != booking.getItem().getOwner().getId()) {
+                .orElseThrow(() -> new NotFoundException("Booking not found"));
+        if (userId != booking.getItem().getOwner().getId()) {
             throw new NotFoundException("You are not hte owner!");
         }
         if (booking.getStatus().equals(Status.WAITING)) {
-            if (approved){
+            if (approved) {
                 booking.setStatus(Status.APPROVED);
             } else {
                 booking.setStatus(Status.REJECTED);
@@ -145,15 +145,15 @@ public class BookingServiceImpl implements BookingService{
     @Transactional(readOnly = true)
     @Override
     public BookingDto getById(int bookingId, int userId) {
-        Booking booking = bookingRepository.findById(bookingId).
-                orElseThrow(()-> new NotFoundException("Booking not found"));
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new NotFoundException("Booking not found"));
         if (userId != booking.getBooker().getId() && userId != booking.getItem().getOwner().getId()) {
             throw new NotFoundException("Booking is available members only!");
         }
         return bookingMapper.toBookingDto(booking);
     }
 
-    private Boolean dateValidator (BookingTimesDto bookingTimesDto) {
+    private Boolean dateValidator(BookingTimesDto bookingTimesDto) {
         return (bookingTimesDto.getEnd().isBefore(bookingTimesDto.getStart())
                 || bookingTimesDto.getStart().equals(bookingTimesDto.getEnd()));
     }

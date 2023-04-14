@@ -17,10 +17,6 @@ import java.util.List;
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
     Slice<Booking> findAllByBookerIdOrderByStartDesc(int bookerId, Pageable pageable);
 
-    Page<Booking> findAllByBookerId(int userId, Pageable pageable);
-
-    Page<Booking> findAllByBookerOrderByStartDesc(User user, Pageable pageable);
-
     Page<Booking> findAllByBookerIdAndStatusOrderByStartDesc(int bookerId, Status status, Pageable pageable);
 
     List<Booking> findAllByBookerIdAndStatusOrderByStartDesc(int bookreId, Status status);

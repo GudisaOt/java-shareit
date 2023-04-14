@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingTimesDto;
+import ru.practicum.shareit.exceptions.BadRequestException;
+import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.ItemController;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.user.User;
@@ -16,6 +18,7 @@ import ru.practicum.shareit.user.UserController;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static ru.practicum.shareit.enums.Status.*;
 
 @SpringBootTest
@@ -110,4 +113,89 @@ public class BookingControllerTest {
         ResponseEntity<BookingDto> bookingDto = bookingController.create(booker.getBody().getId(), bookingTimesDto);
         assertEquals(1, bookingController.getAllByOwner(1,"WAITING", 0,2).getBody().size());
     }
+
+    @Test
+    void notFoundExcWrongUserId() {
+        assertThrows(NotFoundException.class, () -> bookingController.create(1,bookingTimesDto));
+    }
+
+    @Test
+    void badRequestExcNegativeSize() {
+        userController.createUser(user);
+
+        assertThrows(BadRequestException.class, () -> bookingController.getAllByUser(1,"ALL",1,-1));
+        assertThrows(BadRequestException.class, () -> bookingController.getAllByOwner(1,"ALL",1,-1));
+    }
+
+    @Test
+    void badRequestExcWhenItemIsNotAvailable() {
+        userController.createUser(user);
+        userController.createUser(user1);
+        itemDto.setAvailable(false);
+        itemController.create(itemDto,1);
+
+        assertThrows(BadRequestException.class, () -> bookingController.create(2,bookingTimesDto));
+    }
+
+    @Test
+    void notFoundExceptionWhenBookerIsOwner() {
+        userController.createUser(user);
+        itemController.create(itemDto,1);
+
+        assertThrows(NotFoundException.class, () -> bookingController.create(1,bookingTimesDto));
+    }
+
+    @Test
+    void badRequestExcWhenWrongEnd() {
+        userController.createUser(user);
+        userController.createUser(user1);
+        itemController.create(itemDto,1);
+        bookingTimesDto.setEnd(LocalDateTime.of(1999,12,13,22,00));
+
+        assertThrows(BadRequestException.class, () -> bookingController.create(2,bookingTimesDto));
+    }
+
+    @Test
+    void badRequestExcApproveWhenStatusIsCanceled() {
+        userController.createUser(user);
+        userController.createUser(user1);
+        itemController.create(itemDto,1);
+        ResponseEntity<BookingDto> bookingDto = bookingController.create(2,bookingTimesDto);
+        bookingController.approve(1,1,false);
+
+        assertThrows(BadRequestException.class, () -> bookingController.approve(1,1,true));
+    }
+
+    @Test
+    void notFoundExceptionWhenUserIsNotOwner() {
+        userController.createUser(user);
+        userController.createUser(user1);
+        itemController.create(itemDto,1);
+        ResponseEntity<BookingDto> bookingDto = bookingController.create(2,bookingTimesDto);
+
+        assertThrows(NotFoundException.class, () -> bookingController.approve(2,1,true));
+    }
+
+    @Test
+    void notFoundExceptionWhenBookingIdIsWrong() {
+        userController.createUser(user);
+        userController.createUser(user1);
+        itemController.create(itemDto,1);
+        ResponseEntity<BookingDto> bookingDto = bookingController.create(2,bookingTimesDto);
+
+        assertThrows(NotFoundException.class, () -> bookingController.approve(1,2,true));
+        assertThrows(NotFoundException.class, () -> bookingController.getById(1,2));
+    }
+
+    @Test
+    void notFoundExceptionWhenUserIsNotBookerOrOwner() {
+        userController.createUser(user);
+        userController.createUser(user1);
+        userController.createUser(User.builder().name("wrong").email("wrong@mail").build());
+        itemController.create(itemDto,1);
+        ResponseEntity<BookingDto> bookingDto = bookingController.create(2,bookingTimesDto);
+
+        assertThrows(NotFoundException.class, () -> bookingController.getById(3,1));
+    }
+
 }

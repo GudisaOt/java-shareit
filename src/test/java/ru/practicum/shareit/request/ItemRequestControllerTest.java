@@ -6,11 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
+import ru.practicum.shareit.exceptions.BadRequestException;
+import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.request.dto.ItemRequestDto;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserController;
 
+import javax.validation.ConstraintViolationException;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -77,5 +82,25 @@ public class ItemRequestControllerTest {
 
         assertEquals(0, itemRequestController.getAllByUser(user1.getBody().getId()).getBody().size());
         assertEquals(1, itemRequestController.getAllByUser(requestor.getBody().getId()).getBody().size());
+    }
+
+    @Test
+    void validationExcWhenRequestIsNull() {
+        userController.createUser(user);
+        assertThrows(ConstraintViolationException.class, () -> itemRequestController.create(1,new ItemRequestDto()));
+    }
+
+    @Test
+    void notFoundExcWhenUserOrRequestDoesntExist() {
+        userController.createUser(user);
+        assertThrows(NotFoundException.class, () -> itemRequestController.create(2, request));
+        assertThrows(NotFoundException.class, () -> itemRequestController.getById(2, 1));
+        assertThrows(NotFoundException.class, () -> itemRequestController.getById(1,1));
+        assertThrows(NotFoundException.class, () ->itemRequestController.getAllByUser(4));
+    }
+
+    @Test
+    void badRequestExcWhenSizeISNegative() {
+        assertThrows(BadRequestException.class, () ->itemRequestController.getAll(1,1,-1));
     }
 }

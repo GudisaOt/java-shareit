@@ -6,8 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
+import ru.practicum.shareit.exceptions.NotFoundException;
+
+
+import javax.validation.ConstraintViolationException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -49,5 +55,16 @@ public class UserControllerTest {
         assertEquals(1, userController.getAllUsers().getBody().size());
         userController.deleteUser(1);
         assertEquals(0, userController.getAllUsers().getBody().size());
+    }
+
+    @Test
+    void notFoundExceptionWhenIdIsWrong() {
+        assertThrows(NotFoundException.class, () -> userController.getUserById(1000));
+    }
+
+    @Test
+    void validationExceptionWhenUserFieldsIsNull() {
+        assertThrows(ConstraintViolationException.class, () -> userController.createUser(new User()));
+
     }
 }

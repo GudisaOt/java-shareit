@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
+import ru.practicum.shareit.exceptions.BadRequestException;
+import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
@@ -14,7 +16,10 @@ import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserController;
 
 
+import javax.validation.ConstraintViolationException;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
@@ -105,5 +110,31 @@ public class ItemControllerTests {
                         .build(), 1);
 
         assertEquals(1, itemController.search("PhoNE").getBody().size());
+    }
+
+    @Test
+    void notFoundExcWhenWrongId() {
+        assertThrows(NotFoundException.class, () -> itemController.getById(11,12));
+        assertThrows(NotFoundException.class, () -> itemController.update(Item.builder()
+                        .available(true)
+                        .name("item")
+                        .description("desc")
+                        .build(),11,12));
+    }
+
+    @Test
+    void validationExceptionWhenItemFieldIsNull() {
+        userController.createUser(user);
+
+        assertThrows(ConstraintViolationException.class, () -> itemController.create(new ItemDto(),1));
+    }
+
+    @Test
+    void badRequestExcWhenCommentIsBlank() {
+        userController.createUser(user);
+        itemController.create(itemDto,1);
+        comment.setText("");
+
+        assertThrows(BadRequestException.class, () -> itemController.postComment(1,1, comment));
     }
 }

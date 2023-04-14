@@ -36,7 +36,7 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<ItemDto> create(@Valid @RequestBody Item item, @RequestHeader(header) Integer userId) {
+    public ResponseEntity<ItemDto> create(@Valid @RequestBody ItemDto item, @RequestHeader(header) Integer userId) {
         return ResponseEntity.ok().body(itemService.create(item,userId));
     }
 

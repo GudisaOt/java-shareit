@@ -96,11 +96,11 @@ public class ItemRequestControllerTest {
         assertThrows(NotFoundException.class, () -> itemRequestController.create(2, request));
         assertThrows(NotFoundException.class, () -> itemRequestController.getById(2, 1));
         assertThrows(NotFoundException.class, () -> itemRequestController.getById(1,1));
-        assertThrows(NotFoundException.class, () ->itemRequestController.getAllByUser(4));
+        assertThrows(NotFoundException.class, () -> itemRequestController.getAllByUser(4));
     }
 
     @Test
     void badRequestExcWhenSizeISNegative() {
-        assertThrows(BadRequestException.class, () ->itemRequestController.getAll(1,1,-1));
+        assertThrows(BadRequestException.class, () -> itemRequestController.getAll(1,1,-1));
     }
 }

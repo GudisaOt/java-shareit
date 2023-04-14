@@ -8,7 +8,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
-import ru.practicum.shareit.enums.Status;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.User;
@@ -44,6 +43,7 @@ public class BookingRepositoryTest {
     private Booking booking2;
 
     private LocalDateTime endDate;
+
     @BeforeEach
     void setUp() {
         user = User.builder()
@@ -94,8 +94,8 @@ public class BookingRepositoryTest {
 
     @Test
     void findAllByBookerIdOrderByStartDescTest() {
-        List<Booking> list = bookingRepository.
-                findAllByBookerIdOrderByStartDesc(2, PageRequest.of(0,10)).toList();
+        List<Booking> list = bookingRepository
+                .findAllByBookerIdOrderByStartDesc(2, PageRequest.of(0,10)).toList();
 
         assertEquals(user2.getName(), list.get(0).getBooker().getName());
         assertEquals(booking2, list.get(0));

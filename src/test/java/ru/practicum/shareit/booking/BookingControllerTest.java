@@ -117,6 +117,9 @@ public class BookingControllerTest {
     @Test
     void notFoundExcWrongUserId() {
         assertThrows(NotFoundException.class, () -> bookingController.create(1,bookingTimesDto));
+        assertThrows(NotFoundException.class, () -> bookingController.getAllByOwner(1,"ALL", 1,1));
+        assertThrows(NotFoundException.class, () -> bookingController.getAllByUser(1,"ALL", 1,1));
+        assertThrows(NotFoundException.class, () -> bookingController.create(1,bookingTimesDto));
     }
 
     @Test

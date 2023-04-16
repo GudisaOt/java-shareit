@@ -183,6 +183,14 @@
 					<version>0.8.8</version>
 					<configuration>
 						<output>file</output>
+						<excludes>
+                                    <exclude>ru.practicum.shareit/**/model/*</exclude>
+                                    <exclude>ru.practicum.shareit/enums</exclude>
+                                    <exclude>ru.practicum.shareit/exceptions</exclude>
+                                    <exclude>ru.practicum.shareit/request/ItemRequest.class</exclude>
+                                    <exclude>ru.practicum.shareit/user/User.class</exclude>
+                                    <exclude>**/config/*</exclude>
+                                </excludes>
 					</configuration>
 					<executions>
 						<execution>

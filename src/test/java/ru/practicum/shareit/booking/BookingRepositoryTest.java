@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.annotation.DirtiesContext;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
+import ru.practicum.shareit.enums.Status;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.User;
@@ -71,6 +72,7 @@ public class BookingRepositoryTest {
         booking = Booking.builder()
                 .booker(user)
                 .item(item)
+                .status(Status.WAITING)
                 .start(LocalDateTime.of(2023,11,1,1,1,1))
                 .end(LocalDateTime.of(2023,12,2,2,2,2))
                 .build();
@@ -78,6 +80,7 @@ public class BookingRepositoryTest {
         booking2 = Booking.builder()
                 .booker(user2)
                 .item(item)
+                .status(Status.WAITING)
                 .start(LocalDateTime.of(2023,5,1,1,1,1))
                 .end(LocalDateTime.of(2023,6,2,2,2,2))
                 .build();
@@ -139,5 +142,75 @@ public class BookingRepositoryTest {
                 .findAllByItemOwnerIdOrderByStartDesc(3,PageRequest.of(0,10)).toList();
 
         assertEquals(user3, list.get(0).getItem().getOwner());
+    }
+
+    @Test
+    void findAllByBookerIdAndStatusOrderByStartDescTest() {
+        List<Booking> list = bookingRepository
+                .findAllByBookerIdAndStatusOrderByStartDesc(1, Status.WAITING,PageRequest.of(0,10)).toList();
+
+        assertEquals(1,list.size());
+    }
+
+    @Test
+    void findAllByBookerIdAndStatusOrderByStartDescTestList() {
+        List<Booking> list = bookingRepository
+                .findAllByBookerIdAndStatusOrderByStartDesc(1, Status.WAITING);
+
+        assertEquals(1,list.size());
+    }
+
+    @Test
+    void findAllByBookerIdAndStartAfterOrderByStartDescTest() {
+        List<Booking> list = bookingRepository
+                .findAllByBookerIdAndStartAfterOrderByStartDesc(1, LocalDateTime.now(),PageRequest.of(0,10)).toList();
+
+        assertEquals(1,list.size());
+    }
+
+    @Test
+    void findAllByBookerIdAndStartBeforeAndEndAfterOrderByStartDescTest() {
+        List<Booking> list = bookingRepository
+                .findAllByBookerIdAndStartBeforeAndEndAfterOrderByStartDesc(1,
+                        LocalDateTime.of(2023,11,2,1,1,1),
+                        LocalDateTime.of(2023,12,2,1,2,2),
+                        PageRequest.of(0,10)).toList();
+
+        assertEquals(1,list.size());
+    }
+
+    @Test
+    void findAllByItemOwnerIdAndStatusOrderByStartDescTest() {
+        List<Booking> list = bookingRepository
+                .findAllByItemOwnerIdAndStatusOrderByStartDesc(3,Status.WAITING,PageRequest.of(0,10)).toList();
+
+        assertEquals(2,list.size());
+    }
+
+    @Test
+    void findAllByItemOwnerIdAndStartAfterOrderByStartDescTest() {
+        List<Booking> list = bookingRepository
+                .findAllByItemOwnerIdAndStartAfterOrderByStartDesc(3,LocalDateTime.now(),PageRequest.of(0,10)).toList();
+
+        assertEquals(2,list.size());
+    }
+
+    @Test
+    void findAllByItemOwnerIdAndStartBeforeAndEndAfterOrderByStartDescTest() {
+        List<Booking> list = bookingRepository
+                .findAllByItemOwnerIdAndStartBeforeAndEndAfterOrderByStartDesc(3,
+                        LocalDateTime.of(2023,11,2,1,1,1),
+                        LocalDateTime.of(2023,12,2,1,2,2),
+                        PageRequest.of(0,10)).toList();
+
+        assertEquals(1,list.size());
+    }
+
+    @Test
+    void findAllByBookerIdAndItemIdAndStatusAndEndBeforeTest() {
+        List<Booking> list = bookingRepository
+                .findAllByBookerIdAndItemIdAndStatusAndEndBefore(1,1,Status.WAITING,endDate);
+
+        assertEquals(1,list.size());
     }
 }

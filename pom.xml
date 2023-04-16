@@ -184,13 +184,12 @@
 					<configuration>
 						<output>file</output>
 						<excludes>
-                                    <exclude>ru.practicum.shareit/**/model/*</exclude>
-                                    <exclude>ru.practicum.shareit/enums</exclude>
-                                    <exclude>ru.practicum.shareit/exceptions</exclude>
-                                    <exclude>ru.practicum.shareit/request/ItemRequest.class</exclude>
-                                    <exclude>ru.practicum.shareit/user/User.class</exclude>
-                                    <exclude>**/config/*</exclude>
-                                </excludes>
+						    <exclude>ru.practicum.shareit/**/model/*</exclude>
+                            <exclude>ru.practicum.shareit/enums</exclude>
+                            <exclude>ru.practicum.shareit/exceptions</exclude>
+                            <exclude>ru.practicum.shareit/request/ItemRequest.class</exclude>
+                            <exclude>ru.practicum.shareit/User/User.class</exclude>
+						</excludes>
 					</configuration>
 					<executions>
 						<execution>
@@ -250,7 +249,17 @@
 							<goals>
 								<goal>report</goal>
 							</goals>
+							<configuration>
+							    <excludes>
+                                    <exclude>ru.practicum.shareit/**/model/*</exclude>
+                                    <exclude>ru.practicum.shareit/enums</exclude>
+                                    <exclude>ru.practicum.shareit/exceptions</exclude>
+                                    <exclude>ru.practicum.shareit/request/ItemRequest.class</exclude>
+                                    <exclude>ru.practicum.shareit/User/User.class</exclude>
+                                </excludes>
+							</configuration>
 						</execution>
+
 					</executions>
 				</plugin>
 			</plugins>

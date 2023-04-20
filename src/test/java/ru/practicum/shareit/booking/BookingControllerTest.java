@@ -128,7 +128,7 @@ public class BookingControllerTest {
     }
 
     @Test
-    void BadRequestWhenStatusIsWrong() {
+    void badRequestWhenStatusIsWrong() {
         ResponseEntity<User> owner = userController.createUser(user);
         ResponseEntity<User> booker = userController.createUser(user1);
         ResponseEntity<ItemDto> item = itemController.create(itemDto, owner.getBody().getId());

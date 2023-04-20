@@ -103,6 +103,12 @@ public class BookingControllerTest {
         ResponseEntity<ItemDto> item = itemController.create(itemDto, owner.getBody().getId());
         ResponseEntity<BookingDto> bookingDto = bookingController.create(booker.getBody().getId(), bookingTimesDto);
         assertEquals(1, bookingController.getAllByUser(2,"WAITING", 0,2).getBody().size());
+        bookingController.approve(1,1,false);
+        assertEquals(1, bookingController.getAllByUser(2,"REJECTED", 0,2).getBody().size());
+        assertEquals(0, bookingController.getAllByUser(2,"PAST", 0,2).getBody().size());
+        assertEquals(0, bookingController.getAllByUser(2,"CURRENT", 0,2).getBody().size());
+        assertEquals(1, bookingController.getAllByUser(2,"FUTURE", 0,2).getBody().size());
+        assertEquals(1, bookingController.getAllByUser(2,"ALL", 0,2).getBody().size());
     }
 
     @Test
@@ -112,6 +118,23 @@ public class BookingControllerTest {
         ResponseEntity<ItemDto> item = itemController.create(itemDto, owner.getBody().getId());
         ResponseEntity<BookingDto> bookingDto = bookingController.create(booker.getBody().getId(), bookingTimesDto);
         assertEquals(1, bookingController.getAllByOwner(1,"WAITING", 0,2).getBody().size());
+        bookingController.approve(1,1,false);
+        assertEquals(1, bookingController.getAllByOwner(1,"REJECTED", 0,2).getBody().size());
+        assertEquals(0, bookingController.getAllByOwner(1,"PAST", 0,2).getBody().size());
+        assertEquals(0, bookingController.getAllByOwner(1,"CURRENT", 0,2).getBody().size());
+        assertEquals(1, bookingController.getAllByOwner(1,"FUTURE", 0,2).getBody().size());
+        assertEquals(1, bookingController.getAllByOwner(1,"ALL", 0,2).getBody().size());
+
+    }
+
+    @Test
+    void BadRequestWhenStatusIsWrong() {
+        ResponseEntity<User> owner = userController.createUser(user);
+        ResponseEntity<User> booker = userController.createUser(user1);
+        ResponseEntity<ItemDto> item = itemController.create(itemDto, owner.getBody().getId());
+        ResponseEntity<BookingDto> bookingDto = bookingController.create(booker.getBody().getId(), bookingTimesDto);
+        assertThrows(BadRequestException.class, () -> bookingController.getAllByOwner(1,"QWERTY", 0,2));
+        assertThrows(BadRequestException.class, () -> bookingController.getAllByUser(2,"QWERTY",0,2));
     }
 
     @Test

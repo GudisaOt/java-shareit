@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @JsonTest
 public class ItemRequestJsonTest {
     @Autowired
-    JacksonTester<ItemRequestDto> js;
+    private JacksonTester<ItemRequestDto> js;
 
     @Test
     void itemRequestJsonTest() throws IOException {

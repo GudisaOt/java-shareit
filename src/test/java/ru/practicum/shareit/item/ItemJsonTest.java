@@ -14,7 +14,7 @@ import java.io.IOException;
 @JsonTest
 public class ItemJsonTest {
     @Autowired
-    JacksonTester<ItemDto> json;
+    private JacksonTester<ItemDto> json;
 
     @Test
     void itemJsonTest() throws IOException {

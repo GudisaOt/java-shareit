@@ -46,8 +46,9 @@ public class ItemController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Integer id) {
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
         itemService.delete(id);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{itemId}/comment")

@@ -13,7 +13,7 @@ import java.io.IOException;
 @JsonTest
 public class UserJsonTest {
     @Autowired
-    JacksonTester<User> json;
+    private JacksonTester<User> json;
 
     @Test
     void userTest() throws IOException {

@@ -13,7 +13,7 @@ public interface ItemService {
 
     ItemDto getById(int id, int userId);
 
-    ItemDto create(Item item, int userId);
+    ItemDto create(ItemDto item, int userId);
 
     ItemDto update(Item item,int id, int userId);
 

@@ -75,6 +75,35 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
+		<dependency>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-project-info-reports-plugin</artifactId>
+          <version>3.4.2</version>
+          <type>maven-plugin</type>
+        </dependency>
+        <dependency>
+        			<groupId>org.mockito</groupId>
+        			<artifactId>mockito-core</artifactId>
+        			<scope>test</scope>
+        		</dependency>
+
+        		<dependency>
+        			<groupId>com.jayway.jsonpath</groupId>
+        			<artifactId>json-path</artifactId>
+        			<version>2.6.0</version>
+        		</dependency>
+
+        		<dependency>
+        			<groupId>com.fasterxml.jackson.datatype</groupId>
+        			<artifactId>jackson-datatype-jsr310</artifactId>
+        		</dependency>
+
+        		<dependency>
+        			<groupId>nl.jqno.equalsverifier</groupId>
+        			<artifactId>equalsverifier-nodep</artifactId>
+        			<version>3.14.1</version>
+        			<scope>test</scope>
+        		</dependency>
 	</dependencies>
 
 	<build>
@@ -85,6 +114,46 @@
 			</resource>
 		</resources>
 		<plugins>
+		<plugin>
+        				<groupId>org.jacoco</groupId>
+        				<artifactId>jacoco-maven-plugin</artifactId>
+        				<version>0.8.8</version>
+        				<executions>
+        					<execution>
+        						<id>default-prepare-agent</id>
+        						<goals>
+        							<goal>prepare-agent</goal>
+        						</goals>
+        					</execution>
+        					<execution>
+        						<id>default-check</id>
+        						<phase>test</phase>
+        						<goals>
+        							<goal>check</goal>
+        						</goals>
+        						<configuration>
+        							<haltOnFailure>true</haltOnFailure>
+        							<rules>
+        								<rule>
+        									<element>BUNDLE</element>
+        									<limits>
+        										<limit>
+        											<counter>INSTRUCTION</counter>
+        											<value>COVEREDRATIO</value>
+        											<minimum>0.10</minimum>
+        										</limit>
+        										<limit>
+        											<counter>CLASS</counter>
+        											<value>MISSEDCOUNT</value>
+        											<maximum>5</maximum>
+        										</limit>
+        									</limits>
+        								</rule>
+        							</rules>
+        						</configuration>
+        					</execution>
+        				</executions>
+        			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -128,15 +197,6 @@
 			<plugins>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<configuration>
-						<systemPropertyVariables>
-							<spring.profiles.active>test</spring.profiles.active>
-						</systemPropertyVariables>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-checkstyle-plugin</artifactId>
 					<version>3.1.2</version>
 					<configuration>
@@ -177,74 +237,36 @@
 						</execution>
 					</executions>
 				</plugin>
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-site-plugin</artifactId>
+    <version>3.7.1</version>
+</plugin>
+
 				<plugin>
-					<groupId>org.jacoco</groupId>
-					<artifactId>jacoco-maven-plugin</artifactId>
-					<version>0.8.8</version>
-					<configuration>
-						<output>file</output>
-					</configuration>
-					<executions>
-						<execution>
-							<id>jacoco-initialize</id>
-							<goals>
-								<goal>prepare-agent</goal>
-							</goals>
-						</execution>
-						<execution>
-							<id>jacoco-check</id>
-							<goals>
-								<goal>check</goal>
-							</goals>
-							<configuration>
-								<rules>
-									<rule>
-										<element>BUNDLE</element>
-										<limits>
-											<limit>
-												<counter>INSTRUCTION</counter>
-												<value>COVEREDRATIO</value>
-												<minimum>0.01</minimum>
-											</limit>
-											<limit>
-												<counter>LINE</counter>
-												<value>COVEREDRATIO</value>
-												<minimum>0.9</minimum>
-											</limit>
-											<limit>
-												<counter>BRANCH</counter>
-												<value>COVEREDRATIO</value>
-												<minimum>0.6</minimum>
-											</limit>
-											<limit>
-												<counter>COMPLEXITY</counter>
-												<value>COVEREDRATIO</value>
-												<minimum>0.6</minimum>
-											</limit>
-											<limit>
-												<counter>METHOD</counter>
-												<value>COVEREDRATIO</value>
-												<minimum>0.7</minimum>
-											</limit>
-											<limit>
-												<counter>CLASS</counter>
-												<value>MISSEDCOUNT</value>
-												<maximum>1</maximum>
-											</limit>
-										</limits>
-									</rule>
-								</rules>
-							</configuration>
-						</execution>
-						<execution>
-							<id>jacoco-report</id>
-							<phase>test</phase>
-							<goals>
-								<goal>report</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <artifactId>maven-surefire-plugin</artifactId>
+                                <version>3.0.0-M6</version>
+                            </plugin>
+                            <plugin>
+                                <groupId>org.jacoco</groupId>
+                                <artifactId>jacoco-maven-plugin</artifactId>
+                                <version>0.8.8</version>
+                                <executions>
+                                    <execution>
+                                        <goals>
+                                            <goal>prepare-agent</goal>
+                                        </goals>
+                                    </execution>
+                                    <execution>
+                                        <id>report</id>
+                                        <phase>prepare-package</phase>
+                                        <goals>
+                                            <goal>report</goal>
+                                        </goals>
+                                    </execution>
+                                </executions>
+                            </plugin>
 			</plugins>
 		</pluginManagement>
 

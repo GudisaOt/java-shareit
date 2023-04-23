@@ -6,9 +6,9 @@ import ru.practicum.shareit.booking.dto.BookingTimesDto;
 import java.util.List;
 
 public interface BookingService {
-    List<BookingDto> getAllByOwner(int ownerId, String state);
+    List<BookingDto> getAllByOwner(int ownerId, String state, int from, int size);
 
-    List<BookingDto> getAllByUser(int userId, String state);
+    List<BookingDto> getAllByUser(int userId, String state, int from, int size);
 
     BookingDto add(BookingTimesDto bookingTimesDto, int id);
 

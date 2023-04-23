@@ -36,7 +36,7 @@ public class ItemController {
     }
 
     @PostMapping
-    public ResponseEntity<ItemDto> create(@Valid @RequestBody Item item, @RequestHeader(header) Integer userId) {
+    public ResponseEntity<ItemDto> create(@Valid @RequestBody ItemDto item, @RequestHeader(header) Integer userId) {
         return ResponseEntity.ok().body(itemService.create(item,userId));
     }
 
@@ -46,8 +46,9 @@ public class ItemController {
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Integer id) {
+    public ResponseEntity<Void> delete(@PathVariable Integer id) {
         itemService.delete(id);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/{itemId}/comment")

@@ -50,7 +50,7 @@ public class BookingController {
     public ResponseEntity<Object> create(@RequestHeader(header) Long userId,
                                              @Valid @RequestBody BookItemRequestDto bookingGateDto) {
         if (bookingGateDto.getEnd().isBefore(bookingGateDto.getStart())
-                || bookingGateDto.getStart().equals(bookingGateDto.getEnd())){
+                || bookingGateDto.getStart().equals(bookingGateDto.getEnd())) {
             throw new BadRequestException("Incorrect dates");
         }
         return bookingClient.createBooking(userId, bookingGateDto);

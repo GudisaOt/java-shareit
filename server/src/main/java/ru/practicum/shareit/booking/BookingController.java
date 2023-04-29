@@ -47,7 +47,7 @@ public class BookingController {
 
     @PatchMapping("/{bookingId}")
     public ResponseEntity<BookingDto> approve(@RequestHeader(header) Integer userId, @PathVariable Integer bookingId,
-                                           @RequestParam Boolean approved) {
+                                              @RequestParam Boolean approved) {
         return ResponseEntity.ok(bookingService.approve(bookingId, userId, approved));
     }
 }

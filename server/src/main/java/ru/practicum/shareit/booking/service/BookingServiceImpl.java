@@ -128,9 +128,7 @@ public class BookingServiceImpl implements BookingService {
         if (!item.getAvailable()) {
             throw new BadRequestException("Item is not available");
         }
-        if (dateValidator(bookingTimesDto)) {
-            throw new BadRequestException("Booking dates are incorrect");
-        }
+
         Booking booking = bookingMapper.toBooking(bookingTimesDto);
         booking.setItem(item);
         booking.setBooker(user);
@@ -171,10 +169,5 @@ public class BookingServiceImpl implements BookingService {
             throw new NotFoundException("Booking is available members only!");
         }
         return bookingMapper.toBookingDto(booking);
-    }
-
-    private Boolean dateValidator(BookingTimesDto bookingTimesDto) {
-        return (bookingTimesDto.getEnd().isBefore(bookingTimesDto.getStart())
-                || bookingTimesDto.getStart().equals(bookingTimesDto.getEnd()));
     }
 }

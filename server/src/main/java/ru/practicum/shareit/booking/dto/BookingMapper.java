@@ -1,6 +1,5 @@
 package ru.practicum.shareit.booking.dto;
 
-import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.practicum.shareit.booking.model.Booking;

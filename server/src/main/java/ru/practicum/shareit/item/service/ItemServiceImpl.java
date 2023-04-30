@@ -22,6 +22,7 @@ import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.request.ItemRequest;
 import ru.practicum.shareit.request.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.time.LocalDateTime;
@@ -45,6 +46,7 @@ public class ItemServiceImpl implements ItemService {
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
     private final ItemRequestRepository itemRequestRepository;
+    private final UserMapper userMapper;
 
     @Transactional(readOnly = true)
     @Override
@@ -110,7 +112,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto create(ItemDto itemDto, int userId) {
         Item item = itemMapper.toItem(itemDto);
-        item.setOwner(userService.getById(userId));
+        item.setOwner(userMapper.toUser(userService.getById(userId)));
         if (itemDto.getRequestId() > 0) {
             ItemRequest itemRequest = itemRequestRepository.findById(itemDto.getRequestId())
                             .orElseThrow(() -> new NotFoundException("Request not found!"));
@@ -162,7 +164,7 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     @Override
     public CommentDto postComment(Comment comment, int authorId, int itemId) {
-        User user = userService.getById(authorId);
+        User user = userMapper.toUser(userService.getById(authorId));
         Item item = itemRepository.findById(itemId).orElseThrow(() -> new NotFoundException("Item not found"));
         if (comment.getText().isBlank()) {
             throw new BadRequestException("Text is blank!");

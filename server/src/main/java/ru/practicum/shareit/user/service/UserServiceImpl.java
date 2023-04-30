@@ -5,41 +5,48 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exceptions.NotFoundException;
 import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.repository.UserRepository;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Transactional(readOnly = true)
     @Override
-    public Collection<User> getAll() {
-        return userRepository.findAll();
+    public List<UserDto> getAll() {
+        return userRepository.findAll()
+                .stream()
+                .map(userMapper::toUserDto)
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
     @Override
-    public User getById(int id) {
-        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("Not found!"));
+    public UserDto getById(int id) {
+        return userMapper.toUserDto(userRepository.findById(id).orElseThrow(() -> new NotFoundException("Not found!")));
     }
 
     @Transactional
     @Override
-    public User create(User user) {
-        return userRepository.save(user);
+    public UserDto create(User user) {
+        return userMapper.toUserDto(userRepository.save(user));
     }
 
     @Transactional
     @Override
-    public User update(User user, int id) {
+    public UserDto update(User user, int id) {
         User userToUpd = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
         Optional.ofNullable(user.getName()).ifPresent(userToUpd::setName);
         Optional.ofNullable(user.getEmail()).ifPresent(userToUpd::setEmail);
-        return userRepository.save(userToUpd);
+        return userMapper.toUserDto(userRepository.save(userToUpd));
     }
 
     @Transactional

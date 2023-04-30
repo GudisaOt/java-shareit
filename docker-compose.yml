@@ -4,19 +4,20 @@ services:
     build: gateway
     image: gateway
     container_name: shareit-gateway
+    restart: on-failure
     ports:
       - "8080:8080"
     depends_on:
       - server
-      - db
     environment:
       - SHAREIT_SERVER_URL=http://server:9090
-  #    - TZ=Europe/Moscow
+    #  - TZ=Europe/Moscow
 
   server:
     build: server
     image: server
     container_name: shareit-server
+    restart: on-failure
     ports:
       - "9090:9090"
       - "9091:9092"
